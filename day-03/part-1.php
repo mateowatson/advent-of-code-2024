@@ -5,7 +5,6 @@ $output = 0;
 
 $file_contents = file_get_contents(__DIR__.'/input.txt');
 
-// preg_match($file_contents, '/mul\((\d{1,3}),(\d{1,3})\)/', $matches);
 $found = preg_match_all('/mul\((\d{1,3}),(\d{1,3})\)/', $file_contents, $mul_calls);
 
 foreach($mul_calls[1] as $idx => $num1) {
