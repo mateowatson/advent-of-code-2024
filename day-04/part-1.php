@@ -3,7 +3,7 @@
 // number of xmases
 $output = 0;
 
-$file_contents = file_get_contents(__DIR__.'/input.txt');
+$file_contents = file_get_contents(__DIR__.'/sample-input.txt');
 
 $rows = explode("\n", $file_contents);
 
@@ -18,16 +18,16 @@ $to_left_downs = [];
 $to_downs = [];
 
 foreach($rows as $y => $row) {
-    $to_rights[$y] = [];
 
     foreach($row as $x => $char) {
+        $to_rights[$y][] = $char;
         $to_downs[$x][] = $char;
         $to_left_downs[$x + $y][] = $char;
         $to_right_downs[$y - $x][] = $char;
     }
 }
 
-$groups = [$to_right_downs, $to_downs, $to_right_downs, $to_left_downs];
+$groups = [$to_rights, $to_downs, $to_left_downs, $to_right_downs];
 
 foreach($groups as $lines) {
     foreach($lines as $line) {
