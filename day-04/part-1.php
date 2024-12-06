@@ -30,16 +30,9 @@ $groups = [$to_rights, $to_downs, $to_left_downs, $to_right_downs];
 
 foreach($groups as $lines) {
     foreach($lines as $line) {
-        if(stristr($line, 'XMAS')) {
-            $output++;
-        }
-
-        if(stristr(strrev($line), 'XMAS')) {
-            $output++;
-        }
+        $output += substr_count($line, 'XMAS');
+        $output += substr_count(strrev($line), 'XMAS');
     }
 }
-
-var_dump($to_right_downs);
 
 var_dump($output);
