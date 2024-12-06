@@ -3,7 +3,7 @@
 // number of xmases
 $output = 0;
 
-$file_contents = file_get_contents(__DIR__.'/sample-input.txt');
+$file_contents = file_get_contents(__DIR__.'/input.txt');
 
 $rows = explode("\n", $file_contents);
 
@@ -12,47 +12,36 @@ foreach($rows as $idx => $row) {
     $rows[$idx] = $cols;
 }
 
-// $dirs = ['left', 'right', 'up', 'down', 'upleft', 'upright', 'downleft', 'downright'];
-$dirs = [
-    'left' => [-1, 0],
-    'right' => [1, 0],
-    'up' => [0, -1],
-    'down' => [0, 1],
-    'upleft' => [-1, -1],
-    'upright' => [1, -1],
-    'downleft' => [-1, 1],
-    'downright' => [1, 1]
-];
+$to_rights = [];
+$to_right_downs = [];
+$to_left_downs = [];
+$to_downs = [];
 
-// var_dump(find_xmases(count($rows[0]) - 2, 0, $dirs['downleft']));
-$all_cars = '';
+foreach($rows as $y => $row) {
+    $to_rights[$y] = [];
 
-foreach($dirs as $dir) {
-    // $start_x = $dir[0] ? 
+    foreach($row as $x => $char) {
+        $to_downs[$x][] = $char;
+        $to_left_downs[$x + $y][] = $char;
+        $to_right_downs[$y - $x][] = $char;
+    }
 }
 
-function find_xmases($x, $y, $dir) {
-    global $rows;
+$groups = [$to_right_downs, $to_downs, $to_right_downs, $to_left_downs];
 
-    $stacks = [];
+foreach($groups as $lines) {
+    foreach($lines as $line) {
+        $str_line = implode('',$line);
+        $str_line_reverse = implode('',array_reverse($line));
 
-    foreach($rows as $ri => $row) {
-        $stack = '';
-
-        foreach($row as $ci => $col) {
-            // $next_letter = $rows[$ci+($y*$dir[1])][$ci+($x*$dir[0])];
-            $next_letter = $rows[$y+($ci*$dir[1])][$x+($ci*$dir[0])];
-            if($next_letter) {
-                $stack .= $next_letter;
-            } else {
-                break;
-            }
+        if(stristr($str_line, 'XMAS')) {
+            $output++;
         }
 
-        $stacks[] = $stack;
+        if(stristr($str_line_reverse, 'XMAS')) {
+            $output++;
+        }
     }
-
-    return $stacks;
 }
 
-var_dump($rows);
+var_dump($output);
