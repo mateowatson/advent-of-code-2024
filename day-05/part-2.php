@@ -25,6 +25,7 @@ $updates = array_reduce($rows, function($array, $row) {
 
 foreach($updates as $ui => $update) {
     $is_correct = true;
+    $the_rule = null;
     
     foreach($rules as $ri => $rule) {
         $first = array_search($rule[0], $updates[$ui]);
@@ -34,14 +35,19 @@ foreach($updates as $ui => $update) {
 
         if($first > $second) {
             $is_correct = false;
-            $second_num = array_splice($updates[$ui], $second, 1)[0];
-            array_splice($updates[$ui], $first, 0, $second_num);
+            $the_rule = $rule;
         }
     }
 
     if(!$is_correct) {
+        usort($updates[$ui], function($num1, $num2) use ($the_rule) {
+            if(!in_array($num1, $the_rule) || !in_array($num2, $the_rule)) {
+                return 0;
+            }
+            return $the_rule[0] === $num1 ? -1 : 1;
+        });
         $output += $updates[$ui][floor(count($update)/2)];
     }
 }
 
-var_dump($output); // 3894 too low
+var_dump($output); // 4136 too low
