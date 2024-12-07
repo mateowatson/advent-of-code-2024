@@ -23,6 +23,18 @@ $updates = array_reduce($rows, function($array, $row) {
     return $array;
 }, []);
 
+$updates = array_map(function($update) {
+    return array_map(function($n) {
+        return (int)$n;
+    }, $update);
+}, $updates);
+
+$rules = array_map(function($rule) {
+    return array_map(function($n) {
+        return (int)$n;
+    }, $rule);
+}, $rules);
+
 foreach($updates as $ui => $update) {
     $is_correct = true;
     $the_rule = null;
@@ -40,12 +52,19 @@ foreach($updates as $ui => $update) {
     }
 
     if(!$is_correct) {
-        usort($updates[$ui], function($num1, $num2) use ($the_rule) {
-            if(!in_array($num1, $the_rule) || !in_array($num2, $the_rule)) {
+        usort($updates[$ui], function($a, $b) use ($rules) {
+            $rule_arr = array_values(array_filter(
+                $rules,
+                fn($r) => in_array($a, $r) && in_array($b, $r)
+            ));
+
+            if(!count($rule_arr[0])) {
                 return 0;
             }
-            return $the_rule[0] === $num1 ? -1 : 1;
+
+            return $a === $rule_arr[0][0] ? -1 : 1;
         });
+        
         $output += $updates[$ui][floor(count($update)/2)];
     }
 }
