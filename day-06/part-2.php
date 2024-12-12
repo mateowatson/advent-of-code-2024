@@ -21,9 +21,10 @@ foreach($room as $idx => $col) {
 
 foreach($room as $r_idx => $row) {
     foreach($row as $c_idx => $col) {
-        if($col !== '.') {
+        if($room[$r_idx][$c_idx] !== '.') {
             continue;
         }
+        var_dump('----', implode(',',[$c_idx,$r_idx]));
 
         $room[$r_idx][$c_idx] = '#';
         $guard_pos = $starting_pos;
@@ -33,8 +34,6 @@ foreach($room as $r_idx => $row) {
         $stop = false;
         $guard_path[] = implode(',',$guard_pos);
         $sanity = 0;
-        // var_dump('a', $r_idx);
-        var_dump('----', implode(',',[$c_idx,$r_idx]));
 
         while($stop === false) {
 
@@ -60,7 +59,13 @@ foreach($room as $r_idx => $row) {
             }
 
             if(!empty($last_two_pos)) {
-                $is_looping = str_contains(implode(',',$guard_path_minus_last_two), implode(',',$last_two_pos));
+                // var_dump(
+                //     '---',
+                //     implode('|',$guard_path_minus_last_two),
+                //     '===',
+                //     implode('|',$last_two_pos)
+                // );
+                $is_looping = str_contains(implode('|',$guard_path_minus_last_two), implode('|',$last_two_pos));
             }
 
             if($guard_pos === null) {
