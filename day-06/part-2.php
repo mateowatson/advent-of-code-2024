@@ -1,5 +1,5 @@
 <?php
-
+// answer is 1530
 $num_loop_causing_obstacles = 0;
 
 $file_contents = file_get_contents(__DIR__.'/input.txt');
@@ -33,39 +33,19 @@ foreach($room as $r_idx => $row) {
         $y_dir = -1;
         $stop = false;
         $guard_path[] = implode(',',$guard_pos);
-        $sanity = 0;
+        $count = 0;
 
         while($stop === false) {
-
             $guard_pos = get_new_guard_pos();
 
-            $last_two_pos = null;
-
-            $guard_path_minus_last_two = null;
+            $guard_pos_str = '';
 
             $is_looping = false;
 
-            if(count($guard_path) > 3) {
-                $last_two_pos = array_slice(
-                    $guard_path,
-                    -2,
-                );
-
-                $guard_path_minus_last_two = array_slice(
-                    $guard_path,
-                    0,
-                    (count($guard_path) - 2)
-                );
-            }
-
-            if(!empty($last_two_pos)) {
-                // var_dump(
-                //     '---',
-                //     implode('|',$guard_path_minus_last_two),
-                //     '===',
-                //     implode('|',$last_two_pos)
-                // );
-                $is_looping = str_contains(implode('|',$guard_path_minus_last_two), implode('|',$last_two_pos));
+            if($guard_pos !== null) {
+                $guard_pos_str = implode(',',[...$guard_pos, 'x'.$x_dir.'y'.$y_dir]);
+                if($count % 5000 === 0)
+                    $is_looping = in_array($guard_pos_str, $guard_path);
             }
 
             if($guard_pos === null) {
@@ -74,8 +54,10 @@ foreach($room as $r_idx => $row) {
                 $num_loop_causing_obstacles++;
                 $stop = true;
             } else {
-                $guard_path[] = implode(',',$guard_pos);
+                $guard_path[] = $guard_pos_str;
             }
+
+            $count++;
         }
 
         $room[$r_idx][$c_idx] = '.';
