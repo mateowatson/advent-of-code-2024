@@ -32,13 +32,11 @@ foreach($room as $r_idx => $row) {
         $x_dir = 0;
         $y_dir = -1;
         $stop = false;
-        $guard_path[] = implode(',',$guard_pos);
+        $guard_path[] = implode(',',[...$guard_pos, 'x'.$x_dir.'y'.$y_dir]);
         $count = 0;
 
         while($stop === false) {
             $guard_pos = get_new_guard_pos();
-
-            $guard_pos_str = '';
 
             $is_looping = false;
 
