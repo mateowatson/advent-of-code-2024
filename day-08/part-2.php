@@ -1,6 +1,6 @@
 <?php
 
-$file_contents = file_get_contents(__DIR__.'/sample-input.txt');
+$file_contents = file_get_contents(__DIR__.'/input.txt');
 
 $rows = explode("\n", $file_contents);
 
@@ -52,11 +52,15 @@ foreach($antennas as $ai1 => $antenna1) {
             if($antinode1val === null) {
                 $antinode1_items_stop_search = true;
             } else {
-                $antinode_points[] = implode(',',$antinode1);
                 $antinode1_items[] = $antinode1;
             }
 
             $count++;
+        }
+
+        foreach($antinode1_items as $i => $item) {
+            if($i === 0) continue;
+            $antinode_points[] = implode(',',$item);
         }
 
         $antinode2_items = [
@@ -82,17 +86,32 @@ foreach($antennas as $ai1 => $antenna1) {
             if($antinode2val === null) {
                 $antinode2_items_stop_search = true;
             } else {
-                $antinode_points[] = implode(',',$antinode2);
                 $antinode2_items[] = $antinode2;
             }
 
             $count++;
         }
+
+        foreach($antinode2_items as $i => $item) {
+            if($i === 0) continue;
+            $antinode_points[] = implode(',',$item);
+        }
+            
     }
 }
 
-var_dump($antinode_points);
-var_dump(count(array_unique($antinode_points)));
+foreach($antinode_points as $pt) {
+    $point = explode(',',$pt);
+    if($rows[intval($point[1])][intval($point[0])] === '.')
+        $rows[intval($point[1])][intval($point[0])] = '#';
+}
+$string = '';
+foreach($rows as $cols) {
+    $string .= implode(' ', $cols) . "\n";
+}
+
+preg_match_all('/#|\d|[A-Z]|[a-z]/',$string, $matches);
+var_dump(count($matches[0]));
 
 function get_point($x, $y) {
     global $rows;
