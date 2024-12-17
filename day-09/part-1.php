@@ -82,3 +82,5 @@ foreach($block_map_compressed as $idx => $num) {
 $check_sum = array_sum($check_sum_nums);
 
 var_dump($check_sum);
+
+// 7692901063302 is too high
