@@ -1,6 +1,6 @@
 <?php
 
-$disk_map = file_get_contents(__DIR__.'/sample-input.txt');
+$disk_map = file_get_contents(__DIR__.'/input.txt');
 
 // var_dump($disk_map);
 
@@ -36,16 +36,49 @@ foreach($digits as $idx => $digit) {
 
 // var_dump($files);
 
-$block_map = '';
+$block_map = [];
 
 foreach($files as $file) {
     for($i = 0; $i < $file->blocks; $i++) {
-        $block_map .= $file->id;
+        $block_map[] = $file->id;
     }
     for($i = 0; $i < $file->free_space; $i++) {
-        $block_map .= '.';
+        $block_map[] = '.';
     }
 }
 
-var_dump($block_map);
+$block_map_compressed = [];
 
+$free_space_padding = [];
+
+for($i = 0; $i < count($block_map); $i++) {
+    if(!isset($block_map[$i])) continue;
+
+    if($block_map[$i] === '.') {
+        if($block_map[count($block_map) - 1] === '.') {
+            array_pop($block_map);
+            $free_space_padding[] = '.';
+        }
+        
+        $block_map_compressed[] = array_pop($block_map);
+        $free_space_padding[] = '.';
+        
+    } else {
+        $block_map_compressed[] = $block_map[$i];
+    }
+    
+}
+
+$block_map_compressed = array_merge($block_map_compressed, $free_space_padding);
+
+$check_sum_nums = [];
+
+foreach($block_map_compressed as $idx => $num) {
+    if($num === '.') continue;
+
+    $check_sum_nums[] = $idx * $num;
+}
+
+$check_sum = array_sum($check_sum_nums);
+
+var_dump($check_sum);
