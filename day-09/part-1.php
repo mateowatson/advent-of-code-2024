@@ -2,8 +2,6 @@
 
 $disk_map = file_get_contents(__DIR__.'/input.txt');
 
-// var_dump($disk_map);
-
 $digits = array_map(fn($digit) => intval($digit), str_split($disk_map));
 
 class File {
@@ -34,8 +32,6 @@ foreach($digits as $idx => $digit) {
     }
 }
 
-// var_dump($files);
-
 $block_map = [];
 
 foreach($files as $file) {
@@ -55,7 +51,7 @@ for($i = 0; $i < count($block_map); $i++) {
     if(!isset($block_map[$i])) continue;
 
     if($block_map[$i] === '.') {
-        if($block_map[count($block_map) - 1] === '.') {
+        while($block_map[count($block_map) - 1] === '.') {
             array_pop($block_map);
             $free_space_padding[] = '.';
         }
@@ -82,5 +78,3 @@ foreach($block_map_compressed as $idx => $num) {
 $check_sum = array_sum($check_sum_nums);
 
 var_dump($check_sum);
-
-// 7692901063302 is too high
